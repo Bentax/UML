@@ -1,0 +1,73 @@
+@startuml OAuth2_JWT_Extended
+skinparam sequenceMessageAlign center
+skinparam ParticipantPadding 20
+skinparam BoxPadding 10
+skinparam sequence {
+  ArrowColor Black
+  LifeLineBorderColor Gray
+  LifeLineBackgroundColor #ECECEC
+}
+
+actor User
+participant "Frontend App" as Client
+participant "Authorization Server (IdP)" as Auth
+participant "Backend Resource Server" as API
+participant "Refresh Token Store" as TokenStore
+participant "Microservice A" as ServiceA
+participant "Microservice B" as ServiceB
+
+== Авторизация пользователя ==
+User -> Client : Открытие защищённого ресурса
+Client -> Auth : /authorize
+note right of Auth
+  Params:
+  - client_id
+  - redirect_uri
+  - scope=openid profile email
+  - response_type=code
+end note
+Auth -> User : Показывает форму логина
+User -> Auth : Ввод логина и согласие на доступ
+Auth --> Client : redirect_uri?code=abc123
+
+== Обмен кода на Access Token ==
+Client -> Auth : /token
+note right of Auth
+  Body:
+  - grant_type=authorization_code
+  - code=abc123
+  - client_id + client_secret
+end note
+note right of Client
+  Response:
+  * Access Token (JWT)
+  * ID Token (JWT)
+  * Refresh Token
+end note
+Client -> TokenStore : Сохраняет refresh token
+
+== Доступ к API ==
+Client -> API : Authorization: Bearer <Access Token>
+API -> Auth : Проверка подписи и срока действия JWT
+Auth --> API : Результат верификации
+API --> Client : Доступ к защищённым данным
+
+== Вызов микросервисов ==
+API -> ServiceA : Authorization: Bearer <Access Token>
+ServiceA -> Auth : Проверка JWT
+ServiceA --> API : OK
+API -> ServiceB : Authorization: Bearer <Access Token>
+ServiceB -> Auth : Проверка JWT
+ServiceB --> API : OK
+
+== Обновление токена (по истечению) ==
+Client -> TokenStore : Получает refresh token
+Client -> Auth : /token (grant_type=refresh_token)
+note right of Client
+  Response:
+  * Новый Access Token
+  * Новый Refresh Token
+end note
+Auth --> Client : Возврат новых токенов
+
+@enduml
