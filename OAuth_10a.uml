@@ -1,0 +1,25 @@
+@startuml OAuth1.0a
+actor User
+participant "Client App" as Client
+participant "Service Provider" as Provider
+participant "Resource Server" as Resource
+
+== Получение Request Token ==
+User -> Client : Вводит логин/пароль
+Client -> Provider : Запрос Request Token
+Provider --> Client : Возврат Request Token
+
+== Авторизация пользователя ==
+Client -> User : Перенаправление на авторизацию
+User -> Provider : Логин и подтверждение доступа
+Provider --> User : Успешная авторизация
+User -> Client : Возврат с OAuth Verifier
+
+== Обмен на Access Token ==
+Client -> Provider : Request Token + Verifier
+Provider --> Client : Access Token
+
+== Доступ к ресурсам ==
+Client -> Resource : Запрос с Access Token
+Resource --> Client : Доступ к защищённым данным
+@enduml
