@@ -1,0 +1,70 @@
+@startuml UseCase_EmployeeDevelopment
+left to right direction
+skinparam packageStyle rectangle
+skinparam actorStyle awesome
+
+' Цвета линий для include/extend
+skinparam ArrowColor Black
+skinparam ArrowFontColor Black
+skinparam usecase {
+  ArrowColor Black
+  ArrowFontColor Black
+}
+
+' Для цветных связей используем цвет в самих стрелках
+actor "Сотрудник" as Employee
+actor "Наставник" as Mentor
+actor "Система обучения" as LMS
+actor "Руководитель" as Manager
+actor "HR" as HR
+actor "Бухгалтерия" as Finance
+
+rectangle "Обучение и развитие персонала" {
+  usecase "Прохождение программы обучения" as UC1
+  usecase "Составление индивидуального плана развития" as UC2
+  usecase "[[Activity_Attestation.puml Аттестация сотрудника]]" as UC3
+  usecase "Аттестация наставника" as UC4
+  usecase "Назначение наставника" as UC5
+  usecase "Начисление бонусов наставнику" as UC6
+  usecase "Уведомление о снижении выплат" as UC7
+  usecase "Уведомление об увольнении" as UC8
+  usecase "Повышение по карьерному треку" as UC9
+  usecase "Обновление матрицы компетенций" as UC10
+  usecase "Развитие корпоративных навыков" as UC11
+}
+
+Employee --> UC1
+Employee --> UC3
+Employee --> UC9
+Employee --> UC11
+
+Mentor --> UC4
+Mentor --> UC6
+
+LMS --> UC1
+LMS --> UC3
+LMS --> UC4
+LMS --> UC11
+
+UC3 -[#blue]-> UC10 : <<include>>
+UC4 -[#blue]-> UC10 : <<include>>
+UC9 -[#blue]-> UC10 : <<include>>
+UC3 -[#red,dashed]-> UC7 : <<extend>>
+UC3 -[#red,dashed]-> UC8 : <<extend>>
+
+UC2 <-- Manager
+UC3 <-- Manager
+UC4 <-- Manager
+UC5 <-- Manager
+UC9 <-- Manager
+UC10 <-- Manager
+
+UC2 <-- HR
+UC5 <-- HR
+UC7 <-- HR
+UC8 <-- HR
+UC10 <-- HR
+
+UC6 <-- Finance
+UC7 <-- Finance
+@enduml
