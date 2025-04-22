@@ -1,0 +1,125 @@
+@startuml UseCase_HRMS
+left to right direction
+skinparam packageStyle rectangle
+skinparam actorStyle awesome
+
+' Цвета линий по акторам
+skinparam usecase {
+  ArrowColor Black
+  ArrowFontColor Black
+}
+
+actor "Соискатель" as Candidate
+actor "Сотрудник" as Employee
+actor "HR" as HR
+actor "Руководитель" as Manager
+actor "Система HRMS" as System
+actor "Наставник" as Mentor
+actor "Бухгалтерия" as Finance
+
+rectangle "Подбор и найм" {
+  usecase "Сорсинг кандидатов" as UC1
+  usecase "Скрининг резюме" as UC2
+  usecase "Проведение интервью" as UC3
+  usecase "Оформление оффера" as UC4
+  usecase "Принятие на работу" as UC5
+}
+
+rectangle "Адаптация" {
+  usecase "Пребординг" as UC6
+  usecase "Онбординг" as UC7
+  usecase "Оффбординг" as UC8
+}
+
+rectangle "Развитие и обучение" {
+  usecase "Прохождение обучения" as UC9
+  usecase "Развитие хард-скиллов" as UC10
+  usecase "Развитие софт-скиллов" as UC11
+  usecase "Развитие корпоративных навыков" as UC12
+  usecase "Формирование карьерных треков" as UC13
+  usecase "Обновление матрицы компетенций" as UC14
+}
+
+rectangle "Удержание" {
+  usecase "Вознаграждение и бонусы" as UC15
+  usecase "Программы удержания" as UC16
+  usecase "Управление бенефитами" as UC17
+  usecase "Определение и отслеживание KPI" as UC18
+}
+
+rectangle "Управление продуктивностью" {
+  usecase "Оценка эффективности" as UC19
+  usecase "Сбор обратной связи" as UC20
+  usecase "Аналитика и отчеты" as UC21
+}
+
+Candidate -[#green]-> UC1
+Candidate -[#green]-> UC2
+Candidate -[#green]-> UC3
+Candidate -[#green]-> UC4
+Candidate -[#green]-> UC5
+
+HR -[#blue]-> UC1
+HR -[#blue]-> UC2
+HR -[#blue]-> UC3
+HR -[#blue]-> UC4
+HR -[#blue]-> UC5
+HR -[#blue]-> UC6
+HR -[#blue]-> UC7
+HR -[#blue]-> UC8
+HR -[#blue]-> UC13
+HR -[#blue]-> UC14
+HR -[#blue]-> UC15
+HR -[#blue]-> UC16
+HR -[#blue]-> UC17
+HR -[#blue]-> UC18
+HR -[#blue]-> UC19
+HR -[#blue]-> UC20
+HR -[#blue]-> UC21
+
+Employee -[#darkorange]-> UC6
+Employee -[#darkorange]-> UC7
+Employee -[#darkorange]-> UC8
+Employee -[#darkorange]-> UC9
+Employee -[#darkorange]-> UC10
+Employee -[#darkorange]-> UC11
+Employee -[#darkorange]-> UC12
+Employee -[#darkorange]-> UC15
+Employee -[#darkorange]-> UC16
+Employee -[#darkorange]-> UC18
+Employee -[#darkorange]-> UC19
+Employee -[#darkorange]-> UC20
+
+Manager -[#purple]-> UC3
+Manager -[#purple]-> UC5
+Manager -[#purple]-> UC13
+Manager -[#purple]-> UC14
+Manager -[#purple]-> UC18
+Manager -[#purple]-> UC19
+Manager -[#purple]-> UC20
+Manager -[#purple]-> UC21
+
+Mentor -[#brown]-> UC9
+Mentor -[#brown]-> UC10
+Mentor -[#brown]-> UC11
+Mentor -[#brown]-> UC12
+
+Finance -[#darkgreen]-> UC15
+Finance -[#darkgreen]-> UC17
+
+System -[#gray]-> UC14
+System -[#gray]-> UC18
+System -[#gray]-> UC21
+
+' Добавим include/extend связи с разными цветами
+UC9 -[#blue]-> UC10 : <color:blue><<include>>
+UC9 -[#blue]-> UC11 : <color:blue><<include>>
+UC9 -[#blue]-> UC12 : <color:blue><<include>>
+UC13 -[#blue]-> UC14 : <color:blue><<include>>
+UC19 -[#blue]-> UC20 : <color:blue><<include>>
+UC19 -[#blue]-> UC21 : <color:blue><<include>>
+
+UC18 -[#red,dashed]-> UC15 : <color:red><<extend>>
+UC18 -[#red,dashed]-> UC17 : <color:red><<extend>>
+UC21 -[#red,dashed]-> UC18 : <color:red><<extend>>
+@enduml
