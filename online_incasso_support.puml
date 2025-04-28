@@ -1,0 +1,65 @@
+@startuml
+skinparam packageStyle rectangle
+left to right direction
+
+actor "Клиент" as Client
+actor "Менеджер по продажам" as SalesManager
+actor "Отдел подключений" as Onboarding
+actor "Служба поддержки" as Support
+actor "Финансовый отдел" as Finance
+actor "CRM-система" as CRM
+actor "Маркетинг" as Marketing
+actor "Банк" as Bank
+
+package "Use Cases" {
+    usecase "Оформление заявки клиентом" as UC1
+    usecase "Подготовка коммерческого предложения" as UC2
+    usecase "Подписание договора онлайн" as UC3
+    usecase "Onboarding клиента" as UC4
+    usecase "Обработка запроса в поддержку" as UC5
+    usecase "Контроль оплаты" as UC6
+    usecase "Анализ эффективности продаж" as UC7
+    usecase "Верификация клиента банком" as UC8
+    usecase "Согласование лимитов инкассации" as UC9
+    usecase "Выявление подозрительных транзакций" as UC10a
+    usecase "Блокировка подозрительных транзакций" as UC10b
+    usecase "Формирование отчета о расчетах" as UC11a
+    usecase "Сверка расчетных данных с банком" as UC11b
+    usecase "Закрытие операционного дня" as UC11c
+}
+
+' Основные связи
+Client --> UC1
+SalesManager --> UC2
+Client --> UC3
+Onboarding --> UC4
+Support --> UC5
+Finance --> UC6
+Marketing --> UC7
+CRM --> UC8
+Bank --> UC8
+SalesManager --> UC9
+Bank --> UC9
+Bank --> UC10a
+CRM --> UC10a
+Bank --> UC10b
+Bank --> UC11a
+Finance --> UC11a
+Bank --> UC11b
+Finance --> UC11b
+Bank --> UC11c
+Finance --> UC11c
+
+' Include связи (зелёные)
+UC1 .[#green].> UC8 : <<include>>
+UC4 .[#green].> UC9 : <<include>>
+UC6 .[#green].> UC11a : <<include>>
+UC11a .[#green].> UC11b : <<include>>
+UC11b .[#green].> UC11c : <<include>>
+
+' Extend связи (синие)
+UC5 .[#blue].> UC10a : <<extend>>
+UC10a .[#blue].> UC10b : <<extend>>
+UC7 .[#blue].> UC2 : <<extend>>
+
+@enduml
