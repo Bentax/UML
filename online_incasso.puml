@@ -1,0 +1,96 @@
+@startuml
+left to right direction
+skinparam packageStyle rectangle
+
+actor Client as "Клиент"
+actor Accountant as "Бухгалтер"
+actor System as "Система онлайн-инкассации"
+
+rectangle "Онлайн-инкассация" {
+
+  (Формировать отчет о выручке за смену) as UC1a
+  (Печать чек-листа передачи) as UC1b
+
+  (Подтверждение передачи денег через QR) as UC2a
+  (Внесение суммы передачи в систему) as UC2b
+  (Формирование электронного акта передачи) as UC2c
+
+  (Передача данных о безналичных платежах в банк) as UC3a
+  (Сверка данных безнала с отчетностью клиента) as UC3b
+
+  (Планирование маршрута для инкассации) as UC4a
+  (Уведомление клиента о планируемой инкассации) as UC4b
+  (Актуализация маршрута при отменах) as UC4c
+
+  (Автоматическое формирование отчетов) as US1
+  (Просмотр истории инкассаций) as US2
+  (Подключение новых точек) as US4
+
+  (Получение маршрута и списка точек) as US5
+  (Сканирование QR-кода передачи) as US6
+  (Внесение суммы в реальном времени) as US7
+
+  (Быстрое формирование отчета за смену) as US8
+
+  (Получение данных по безналу) as US10
+  (Сверка данных по инкассации) as US11
+
+  (Просмотр сводного отчета) as US12
+  (Экспорт данных в 1С) as US13
+
+  (Автоматическая фиксация суммы наличных) as US14a
+  (Автоматическая фиксация суммы безнала) as US14b
+  (Отправка уведомлений) as US15
+}
+
+actor Agent as "Агент инкассации"
+actor Cashier as "Кассир"
+actor Bank as "Банк"
+
+' Связи акторов с юз-кейсами
+Client --> US1
+Client --> US2
+Client --> US4
+
+Agent --> US5
+Agent --> US6
+Agent --> US7
+
+Cashier --> US8
+Cashier --> UC1b
+
+Bank --> US10
+Bank --> US11
+
+Accountant --> US12
+Accountant --> US13
+
+System --> US14a
+System --> US14b
+System --> US15
+
+' Include связи (зеленым)
+UC1a .[#green].> US8 : <<include>>
+UC1b .[#green].> UC1a : <<include>>
+
+UC2a .[#green].> US6 : <<include>>
+UC2b .[#green].> US7 : <<include>>
+UC2c .[#green].> UC2b : <<include>>
+
+UC3a .[#green].> US10 : <<include>>
+UC3b .[#green].> US11 : <<include>>
+
+UC4a .[#green].> US5 : <<include>>
+UC4b .[#green].> UC4a : <<include>>
+UC4c .[#green].> UC4a : <<include>>
+
+' Extend связи (синим)
+US1 .[#blue].> UC1a : <<extend>>
+US2 .[#blue].> UC1a : <<extend>>
+US4 .[#blue].> UC4a : <<extend>>
+US14a .[#blue].> UC1a : <<extend>>
+US14a .[#blue].> UC2b : <<extend>>
+US14b .[#blue].> UC3a : <<extend>>
+US15 .[#blue].> UC4b : <<extend>>
+
+@enduml
